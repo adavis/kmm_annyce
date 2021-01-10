@@ -15,7 +15,6 @@ class TodosApiReal : TodosApi {
         }
     }
 
-    @Throws(Exception::class)
     override suspend fun getAllTodos(): List<Todo> {
         return httpClient.get(ENDPOINT)
     }
