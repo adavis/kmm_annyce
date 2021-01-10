@@ -3,7 +3,26 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
+    kotlin("plugin.serialization")
 }
+
+// workaround for https://youtrack.jetbrains.com/issue/KT-43944
+android {
+    configurations {
+        create("androidTestApi")
+        create("androidTestDebugApi")
+        create("androidTestReleaseApi")
+        create("testApi")
+        create("testDebugApi")
+        create("testReleaseApi")
+    }
+}
+
+val coroutinesVersion = "1.3.9-native-mt"
+val ktorVersion = "1.4.0"
+val serializationVersion = "1.0.0-RC"
+val androidXTestVersion = "1.3.0"
+val androidXTestExtVersion = "1.1.2"
 
 kotlin {
     android()
@@ -15,35 +34,71 @@ kotlin {
         }
     }
     sourceSets {
-        val commonMain by getting
+        all {
+            languageSettings.apply {
+                useExperimentalAnnotation("kotlin.RequiresOptIn")
+                useExperimentalAnnotation("kotlinx.coroutines.ExperimentalCoroutinesApi")
+            }
+        }
+
+        val commonMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation("io.ktor:ktor-client-mock:$ktorVersion")
             }
         }
         val androidMain by getting {
             dependencies {
                 implementation("com.google.android.material:material:1.2.1")
+                implementation("io.ktor:ktor-client-android:$ktorVersion")
             }
         }
         val androidTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
-                implementation("junit:junit:4.13")
+                implementation("junit:junit:4.13.1")
+                implementation("androidx.test:core:$androidXTestVersion")
+                implementation("androidx.test.ext:junit:$androidXTestExtVersion")
+                implementation("androidx.test:runner:$androidXTestVersion")
+                implementation("androidx.test:rules:$androidXTestVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
             }
         }
-        val iosMain by getting
+        val iosMain by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-ios:$ktorVersion")
+            }
+        }
         val iosTest by getting
     }
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(30)
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdkVersion(24)
-        targetSdkVersion(29)
+        targetSdkVersion(30)
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 }
 
