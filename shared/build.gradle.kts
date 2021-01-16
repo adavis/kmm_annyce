@@ -18,12 +18,6 @@ android {
     }
 }
 
-val coroutinesVersion = "1.3.9-native-mt"
-val ktorVersion = "1.4.0"
-val serializationVersion = "1.0.0-RC"
-val androidXTestVersion = "1.3.0"
-val androidXTestExtVersion = "1.1.2"
-
 kotlin {
     android()
     ios {
@@ -47,6 +41,8 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+                implementation("org.koin:koin-core:$koinVersion")
+                api("co.touchlab:kermit:$kermitVersion")
             }
         }
         val commonTest by getting {

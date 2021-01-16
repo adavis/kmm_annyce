@@ -15,6 +15,8 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
     implementation("androidx.activity:activity-ktx:1.1.0")
+    implementation("org.koin:koin-android:$koinVersion")
+    implementation("org.koin:koin-androidx-viewmodel:$koinVersion")
 }
 
 android {

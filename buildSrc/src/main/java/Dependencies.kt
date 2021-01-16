@@ -1,0 +1,8 @@
+const val kotlinVersion = "1.4.0"
+const val coroutinesVersion = "1.3.9-native-mt"
+const val ktorVersion = "1.4.0"
+const val serializationVersion = "1.0.0-RC"
+const val androidXTestVersion = "1.3.0"
+const val androidXTestExtVersion = "1.1.2"
+const val koinVersion = "3.0.0-alpha-4"
+const val kermitVersion = "0.1.8"

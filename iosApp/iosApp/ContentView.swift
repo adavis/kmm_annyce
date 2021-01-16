@@ -2,7 +2,7 @@ import SwiftUI
 import shared
 
 struct ContentView: View {
-    @ObservedObject private var viewModel = ViewModel()
+    @ObservedObject private var viewModel = ViewModel(repository: TodosRepository())
     
     var body: some View {
         NavigationView {

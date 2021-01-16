@@ -10,9 +10,13 @@ import Foundation
 import shared
 
 class ViewModel: ObservableObject {
-    let repository = TodosRepository(api: TodosApiReal())
     @Published var todos = LoadableTodos.loading
-    
+
+    private let repository: TodosRepository
+    init(repository: TodosRepository) {
+        self.repository = repository
+    }
+
     func loadTodos(forceReload: Bool) {
         self.todos = LoadableTodos.loading
         repository.getAllTodos(forceReload: forceReload, completionHandler: { todos, error in
