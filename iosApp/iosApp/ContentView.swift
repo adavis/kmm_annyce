@@ -3,13 +3,25 @@ import shared
 
 struct ContentView: View {
     @ObservedObject private var viewModel = ViewModel(repository: TodosRepository())
+    @State private var text = ""
     
     var body: some View {
         NavigationView {
-            listView()
-                .navigationBarTitle("Todos")
-                .navigationBarItems(trailing:
-                                        Button("Reload") {self.viewModel.loadTodos(forceReload: true)})
+            VStack {
+                listView()
+                    .navigationBarTitle("Todos")
+                    .navigationBarItems(trailing:
+                                        Button("Reload") {
+                                            self.viewModel.loadTodos(forceReload: true)
+                                        })
+                HStack {
+                    TextField("Enter your todo", text: $text)
+                    Button("Submit") {
+                        print("The new todo: \($text.wrappedValue)")
+                        text = ""
+                    }
+                }.padding()
+            }
         }
         .onAppear {
             viewModel.loadTodos(forceReload: false)
@@ -31,3 +43,9 @@ struct ContentView: View {
 }
 
 extension Todo: Identifiable { }
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}

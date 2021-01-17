@@ -14,7 +14,10 @@ struct TodoRow: View {
     
     var body: some View {
         HStack() {
-            Toggle(isOn: Binding.constant(todo.completed), label: { Text(todo.title).frame(maxWidth: .infinity, alignment: .leading) })
+            Toggle(todo.title, isOn: Binding.constant(todo.completed))
+                .onTapGesture {
+                    print("Tapped on the todo: \(todo.id)")
+                }
         }
         .padding()
     }
